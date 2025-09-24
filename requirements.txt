@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+sqlalchemy
+psycopg2-binary
+google-generativeai
+langgraph
+langchain
+langchain-google-genai
+redis
+slowapi
+python-multipart
