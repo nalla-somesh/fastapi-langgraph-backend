@@ -11,3 +11,8 @@ langchain-google-genai
 redis
 slowapi
 python-multipart
+structlog
+black
+flake8
+mypy
+pre-commit

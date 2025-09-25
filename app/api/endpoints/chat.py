@@ -10,6 +10,9 @@ from app.models.database import ChatMessage
 from app.agents.langgraph_workflow import chat_workflow
 from app.core.config import settings
 from app.core.rate_limiter import limiter
+from app.core.logging import get_logger
+
+logger = get_logger("chat")
 
 router = APIRouter()
 
@@ -17,6 +20,8 @@ router = APIRouter()
 @limiter.limit(f"{settings.rate_limit_requests}/minute")
 async def stream_chat(request: Request, chat_request: StreamChatRequest, db: Session = Depends(get_database_session)):
     session_id = chat_request.session_id or str(uuid.uuid4())
+    
+    logger.info("Processing chat request", session_id=session_id, message_length=len(chat_request.message))
     
     # Save user message
     user_message = ChatMessage(
@@ -54,6 +59,8 @@ async def stream_chat(request: Request, chat_request: StreamChatRequest, db: Ses
         )
         db.add(ai_message)
         db.commit()
+        
+        logger.info("Chat response completed", session_id=session_id, response_length=len(full_response))
         
         # Final chunk
         final_chunk = StreamChatChunk(content="", is_complete=True, session_id=session_id, message_id=ai_message_id)

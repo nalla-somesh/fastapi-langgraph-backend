@@ -2,8 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import Base, engine
+from app.core.logging import setup_logging
 from app.api.endpoints import chat
 from app.core.rate_limiter import limiter
+
+# Setup logging
+setup_logging()
 
 # Create tables
 Base.metadata.create_all(bind=engine)
